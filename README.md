@@ -18,7 +18,7 @@ $ curl -X POST localhost:8080/employees -H 'Content-type:application/json' -d '{
 
 Update Employee record
 
-$ curl -X PUT localhost:8080/employees/3 -H 'Content-type:application/json' -d '{"name": "Samwise Gamgee", "role": "Manager"}'
+$ curl -X PUT localhost:8080/employees/3 -H 'Content-type:application/json' -d '{"name": ""Bidyut Medhi"", "role": "Manager"}'
 
 Delete Employee
 
