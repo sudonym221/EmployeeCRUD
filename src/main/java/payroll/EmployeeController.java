@@ -1,7 +1,6 @@
 package payroll;
 
 import org.springframework.data.rest.webmvc.RepositoryRestController;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -17,23 +16,28 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.*;
 public class EmployeeController {
 
     private final EmployeeRepository repository;
-    private final EmployeeModelAssembler assembler;
 
-    @Autowired
-    public EmployeeController(EmployeeRepository repo, EmployeeModelAssembler assembler) { 
+    public EmployeeController(EmployeeRepository repo) { 
         repository = repo;
-        this.assembler = assembler;
     }
+    
+    public EntityModel<Employee> toModel(Employee employee) {
+
+      return EntityModel.of(employee,
+        linkTo(EmployeeController.class).slash(employee.getId()).withSelfRel());
+  }
 
     @PostMapping("/employees")
     ResponseEntity<?> newEmployee(@RequestBody Employee newEmployee) {
 
     System.out.println("Overriding the POST /employees");
-    EntityModel<Employee> entityModel = assembler.toModel(repository.save(newEmployee));
+
+    EntityModel<Employee> entityModel = toModel(repository.save(newEmployee));
+    
     System.out.println("Employee saved");
 
-    return ResponseEntity //
-      .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri()) //
+    return ResponseEntity
+      .created(entityModel.getRequiredLink(IanaLinkRelations.SELF).toUri())
       .body(entityModel);
     }
 
